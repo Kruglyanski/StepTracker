@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Alert,
+  DeviceEventEmitter,
+} from 'react-native';
 import NativeStepCounter from './../../specs/NativeStepCounter';
 import { requestActivityRecognitionPermission } from '../utils/request-permissions';
 
@@ -14,16 +21,15 @@ const StepCounter = () => {
     if (isTracking) {
       NativeStepCounter.startStepCounting();
 
-      const interval = setInterval(() => {
-        NativeStepCounter?.getCurrentStepCount()
-          .then((count: number) => {
-            setSteps(count);
-          })
-          .catch(err => console.error(err));
-      }, 1000);
+      const subscription = DeviceEventEmitter.addListener(
+        'stepCountChanged',
+        count => {
+          setSteps(count);
+        },
+      );
 
       return () => {
-        clearInterval(interval);
+        subscription.remove();
         NativeStepCounter.stopStepCounting();
       };
     }
@@ -55,6 +61,7 @@ const StepCounter = () => {
       <Text style={styles.steps}>Шаги: {steps}</Text>
       <Button
         title={isTracking ? 'Остановить' : 'Начать отслеживание'}
+        color={isTracking ? 'red' : 'green'}
         onPress={handleTrackingToggle}
       />
     </View>
