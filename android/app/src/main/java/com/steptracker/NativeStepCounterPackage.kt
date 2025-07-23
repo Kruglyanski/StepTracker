@@ -7,7 +7,7 @@ import com.facebook.react.uimanager.ViewManager
 
 class NativeStepCounterPackage : ReactPackage {
     override fun createViewManagers(reactContext: ReactApplicationContext) =
-        emptyList<ViewManager<*, *>>()
+        listOf<ViewManager<*, *>>(ProgressBarViewManager())
 
     override fun createNativeModules(reactContext: ReactApplicationContext) =
         listOf<NativeModule>(NativeStepCounterModule(reactContext))
