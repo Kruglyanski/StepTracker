@@ -32,8 +32,7 @@ class NativeStepCounterModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun startStepCounting() {
         if (sensorManager == null || stepSensor == null) {
-            sensorManager = reactApplicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+            this.initialize()
         }
 
         if (stepSensor == null) {
